@@ -18,11 +18,8 @@ const app = (0, express_1.default)();
 const port = 5000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: 'https://medium-clone-latest.vercel.app/'
+    origin: 'https://medium-clone-latest.vercel.app'
 }));
-// To run this code you need to install the following dependencies:
-// npm install @google/genai mime
-// npm install -D @types/node
 const genai_1 = require("@google/genai");
 const ai = new genai_1.GoogleGenAI({ apiKey: 'AIzaSyDEvAUdgUGdfq2dfDl7ty5WL4VNqG5DXTw' });
 app.post('/summarize', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
