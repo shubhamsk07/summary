@@ -13,39 +13,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const genai_1 = require("@google/genai");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
-const port = process.env.PORT || 5000;
-// Middleware to allow all origins
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
-    }
-    next();
-});
+const port = 5000;
 app.use(express_1.default.json());
-// Gemini setup
-const ai = new genai_1.GoogleGenAI({
-    apiKey: 'AIzaSyDEvAUdgUGdfq2dfDl7ty5WL4VNqG5DXTw',
-});
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5173'
+}));
+// To run this code you need to install the following dependencies:
+// npm install @google/genai mime
+// npm install -D @types/node
+const genai_1 = require("@google/genai");
+const ai = new genai_1.GoogleGenAI({ apiKey: 'AIzaSyDEvAUdgUGdfq2dfDl7ty5WL4VNqG5DXTw' });
 app.post('/summarize', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { text } = req.body;
-        const result = yield ai.models.generateContent({
+        const response = yield ai.models.generateContent({
             model: 'gemini-2.0-flash-001',
-            contents: 'Give the summary of the following text: ' + text,
+            contents: 'Give the summary of the following text: ' + req.body.text,
         });
-        const summary = result.data || 'No summary returned';
-        console.log(summary);
-        res.json({ summary });
+        console.log(response.text);
+        res.json(response.text);
     }
     catch (error) {
-        console.error('Error summarizing text:', error);
-        res.status(500).json({ error: 'Error summarizing text' });
+        console.log(error);
+        res.status(500).send('Error summarizing text');
     }
 }));
 app.listen(port, () => {
