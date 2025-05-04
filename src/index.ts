@@ -7,14 +7,9 @@ const port = 5000;
 
 app.use(express.json());
 app.use(cors({
-    origin: 'https://medium-clone-latest.vercel.app/'
+    origin: 'https://medium-clone-latest.vercel.app'
   }));
 
-
-
-  // To run this code you need to install the following dependencies:
-// npm install @google/genai mime
-// npm install -D @types/node
 
 import {
     GoogleGenAI,
